@@ -1,6 +1,7 @@
 var multicurl = require("../lib/multicurl")
   , fs = require("fs")
-  , should = require("should");
+  , should = require("should")
+  , exec = require("child_process").exec;
 
 // Create temporary directory if it doesn't exist already
 before(function () {
@@ -109,6 +110,34 @@ describe("multicurl", function () {
         retried.should.be.above(0);
         done();
       });
+      download.run();
+    });
+  });
+
+  describe("when stopping a download", function () {
+    this.timeout(5000);
+
+    var download;
+    before(function () {
+      download = new multicurl("http://www.speedtest.qsc.de/100MB.qsc", {
+        connections: 3,
+        destination: "tmp/test" + Math.round(Math.random() * 10000)
+      });
+    });
+
+    it("should stop all processes", function (done) {
+      setTimeout(function () {
+        download.stop();
+
+        setTimeout(function () {
+          // Get the amount of curl processes running
+          exec("ps aux|grep curl|grep -v grep|grep -v mocha|wc -l", function (err, stdout, stderr) {
+            stdout.trim().should.equal("0");
+            done();
+          });
+        }, 500);
+
+      }, 3000);
       download.run();
     });
   });
