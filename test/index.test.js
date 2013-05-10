@@ -21,11 +21,12 @@ describe("multicurl", function () {
   });
 
   describe("when downloading a test file with 3 connections", function () {
-    var download;
+    var download
+			, filename = "tmp/test" + Math.round(Math.random() * 10000);
     before(function () {
       download = new multicurl("http://www.speedtest.qsc.de/1MB.qsc", {
         connections: 3,
-        destination: "tmp/test" + Math.round(Math.random() * 10000)
+        destination: filename 
       });
       download.run();
     });
@@ -42,6 +43,13 @@ describe("multicurl", function () {
         done()
       });
     });
+
+		it("should clean up after merging the parts", function (done) {
+			fs.existsSync(filename + ".0").should.be.false;
+			fs.existsSync(filename + ".1").should.be.false;
+			fs.existsSync(filename + ".2").should.be.false;
+			done();
+		});
   });
 
   describe("when an error happens before running curl", function () {
@@ -79,4 +87,29 @@ describe("multicurl", function () {
       });
     });
   });
+
+	describe("when a connection fails", function () {
+		var download;
+    before(function () {
+      download = new multicurl("http://localhost:4444/testfile", {
+        connections: 3,
+        destination: "tmp/test" + Math.round(Math.random() * 10000),
+				timeout: 500 
+      });
+    });
+
+		var testServer = require("./test-server.js")
+			, retried = 0;
+		it("should try to reconnect and still finish downloading", function (done) {
+			this.timeout(30000);
+			download.on("retry", function (retry, connectionIndex) {
+				retried++;
+			});
+			download.once("done", function () {
+				retried.should.be.above(0);
+				done();
+			});
+			download.run();
+		});
+	});
 });

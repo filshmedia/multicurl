@@ -1,6 +1,6 @@
 {
   "name": "multicurl",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Increase CURLs download speed by using multiple connections",
   "main": "lib/multicurl.js",
   "scripts": {
@@ -22,7 +22,8 @@
   "author": "Sascha Gehlich <sascha@gehlich.us>",
   "license": "MIT",
   "devDependencies": {
-    "mocha": "~1.9.0"
+    "mocha": "~1.9.0",
+    "express": "~3.2.4"
   },
   "dependencies": {
     "should": "~1.2.2",
