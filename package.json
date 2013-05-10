@@ -1,6 +1,6 @@
 {
   "name": "multicurl",
-  "version": "0.0.3",
+  "version": "0.0.3-1",
   "description": "Increase CURLs download speed by using multiple connections",
   "main": "lib/multicurl.js",
   "scripts": {
