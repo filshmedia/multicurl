@@ -32,6 +32,13 @@ describe("multicurl", function () {
       download.run();
     });
 
+    it("should fire a filesize event", function (done) {
+      download.once("filesize", function (fileSize) {
+        fileSize.should.equal(1048576);
+        done()
+      });
+    });
+
     it("should fire a progress event", function (done) {
       download.once("progress", function (bytesDone, bytesTotal) {
         done()
