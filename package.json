@@ -1,6 +1,6 @@
 {
   "name": "multicurl",
-  "version": "0.0.4-2",
+  "version": "0.0.5",
   "description": "node.js file downloads with high speed",
   "main": "lib/multicurl.js",
   "scripts": {
@@ -27,6 +27,7 @@
     "should": "~1.2.2"
   },
   "dependencies": {
-    "request": "~2.21.0"
+    "request": "~2.21.0",
+    "underscore": "~1.5.2"
   }
 }

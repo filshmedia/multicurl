@@ -148,4 +148,38 @@ describe("multicurl", function () {
       download.run();
     });
   });
+
+  describe("followRedirects", function () {
+    describe("when set to false", function () {
+      it("should not follow redirects", function (done) {
+        var dest = "tmp/test" + Math.round(Math.random() * 10000);
+        var download = new multicurl("http://google.com", {
+          destination: dest,
+          followRedirects: false
+        });
+        download.once("done", function () {
+          var data = fs.readFileSync(dest);
+          data.toString().should.match(/301 Moved/i);
+          done();
+        });
+        download.run();
+      });
+    });
+
+    describe("when set to true", function () {
+      it("should follow redirects", function (done) {
+        var dest = "tmp/test" + Math.round(Math.random() * 10000);
+        var download = new multicurl("http://google.com", {
+          destination: dest,
+          followRedirects: true
+        });
+        download.once("done", function () {
+          var data = fs.readFileSync(dest);
+          data.toString().should.not.match(/301 Moved/i);
+          done();
+        });
+        download.run();
+      });
+    });
+  });
 });
