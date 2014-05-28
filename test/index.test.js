@@ -30,6 +30,15 @@ describe("multicurl", function () {
         done();
       });
     });
+
+    it('should follow redirects', function (done) {
+      download = new multicurl("http://filsh.net");
+      download.getFilesize(function (err, filesize) {
+        filesize.should.not.equal(185);
+        filesize.should.not.equal(0);
+        done();
+      });
+    })
   });
 
   describe("when downloading a test file with 3 connections", function () {
