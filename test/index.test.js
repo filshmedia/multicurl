@@ -12,13 +12,24 @@ before(function () {
 
 describe("multicurl", function () {
   it("should throw an error if no destination is given", function (done) {
-    multicurl.should.throw("No destination given");
     try {
       var download = new multicurl("http://www.speedtest.qsc.de/1MB.qsc", {
         connections: 3
       });
+      download.should.throw("No destination given");
+      download.run();
     } catch (e) {}
     done();
+  });
+
+  describe('.getFilesize', function () {
+    it('should return the filesize', function (done) {
+      download = new multicurl("http://www.speedtest.qsc.de/100MB.qsc");
+      download.getFilesize(function (err, filesize) {
+        filesize.should.equal(104857600);
+        done();
+      });
+    });
   });
 
   describe("when downloading a test file with 3 connections", function () {
@@ -159,7 +170,7 @@ describe("multicurl", function () {
         });
         download.once("done", function () {
           var data = fs.readFileSync(dest);
-          data.toString().should.match(/301 Moved/i);
+          data.toString().should.match(/302 Moved/i);
           done();
         });
         download.run();
@@ -175,7 +186,7 @@ describe("multicurl", function () {
         });
         download.once("done", function () {
           var data = fs.readFileSync(dest);
-          data.toString().should.not.match(/301 Moved/i);
+          data.toString().should.not.match(/302 Moved/i);
           done();
         });
         download.run();
