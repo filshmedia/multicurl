@@ -41,6 +41,21 @@ describe("multicurl", function () {
     })
   });
 
+  describe("multicurl#getCommand", function () {
+    var download;
+    before(function () {
+      download = new multicurl("http://www.speedtest.qsc.de/1MB.qsc", {
+        connections: 3,
+        destination: "foo/bar"
+      });
+    });
+
+    it("should return the correct command", function () {
+      var command = download.getCommand();
+      command.should.equal("curl -o foo/bar --connect-timeout 10000 -f http://www.speedtest.qsc.de/1MB.qsc");
+    });
+  });
+
   describe("when downloading a test file with 3 connections", function () {
     var download
       , filename = "tmp/test" + Math.round(Math.random() * 10000);
