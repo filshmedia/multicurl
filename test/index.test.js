@@ -92,6 +92,7 @@ describe("multicurl", function () {
     it("should fire an error event", function (done) {
       download.run();
       download.on("error", function (err) {
+        err.message.should.match(/^The requested URL returned/i);
         should.exist(err);
         done();
       });
@@ -110,6 +111,7 @@ describe("multicurl", function () {
     it("should fire an error event", function (done) {
       download.run();
       download.on("error", function (err) {
+        err.message.should.match(/^Failed to create the file/i);
         should.exist(err);
         done();
       });
