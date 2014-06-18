@@ -41,7 +41,7 @@ describe("multicurl", function () {
     })
   });
 
-  describe("multicurl#getCommand", function () {
+  describe("multicurl#getCommands", function () {
     var download;
     before(function () {
       download = new multicurl("http://www.speedtest.qsc.de/1MB.qsc", {
@@ -50,9 +50,14 @@ describe("multicurl", function () {
       });
     });
 
-    it("should return the correct command", function () {
-      var command = download.getCommand();
-      command.should.equal("curl -o foo/bar --connect-timeout 10000 -f http://www.speedtest.qsc.de/1MB.qsc");
+    it("should return the correct commands", function (done) {
+      var command = download.getCommands(function (err, commands) {
+        commands.length.should.equal(3);
+        commands[0].should.equal("curl -o foo/bar.0 --range 0-349524 --connect-timeout 10000 -f http://www.speedtest.qsc.de/1MB.qsc");
+        commands[1].should.equal("curl -o foo/bar.1 --range 349525-699049 --connect-timeout 10000 -f http://www.speedtest.qsc.de/1MB.qsc");
+        commands[2].should.equal("curl -o foo/bar.2 --range 699050-1048575 --connect-timeout 10000 -f http://www.speedtest.qsc.de/1MB.qsc");
+        done();
+      });
     });
   });
 
