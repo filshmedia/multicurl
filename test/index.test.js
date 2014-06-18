@@ -38,7 +38,17 @@ describe("multicurl", function () {
         filesize.should.not.equal(0);
         done();
       });
-    })
+    });
+
+    describe('with https', function (done) {
+      it('should return the filesize', function (done) {
+        download = new multicurl();
+        download.getFilesize("https://www.linode.com/speedtest", function (err, filesize) {
+          filesize.should.not.equal(0);
+          done();
+        });
+      });
+    });
   });
 
   describe("multicurl#getCommands", function () {
