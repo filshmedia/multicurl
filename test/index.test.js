@@ -63,9 +63,9 @@ describe("multicurl", function () {
     it("should return the correct commands", function (done) {
       var command = download.getCommands(function (err, commands) {
         commands.length.should.equal(3);
-        commands[0].should.equal("curl -o foo/bar.0 --range 0-349524 --connect-timeout 10000 -f http://www.speedtest.qsc.de/1MB.qsc");
-        commands[1].should.equal("curl -o foo/bar.1 --range 349525-699049 --connect-timeout 10000 -f http://www.speedtest.qsc.de/1MB.qsc");
-        commands[2].should.equal("curl -o foo/bar.2 --range 699050-1048575 --connect-timeout 10000 -f http://www.speedtest.qsc.de/1MB.qsc");
+        commands[0].should.equal("curl -o foo/bar.0 --connect-timeout 10000 -f --range 0-349524 http://www.speedtest.qsc.de/1MB.qsc");
+        commands[1].should.equal("curl -o foo/bar.1 --connect-timeout 10000 -f --range 349525-699049 http://www.speedtest.qsc.de/1MB.qsc");
+        commands[2].should.equal("curl -o foo/bar.2 --connect-timeout 10000 -f --range 699050-1048575 http://www.speedtest.qsc.de/1MB.qsc");
         done();
       });
     });
@@ -120,12 +120,12 @@ describe("multicurl", function () {
     });
 
     it("should fire an error event", function (done) {
-      download.run();
       download.on("error", function (err) {
         err.message.should.match(/^The requested URL returned/i);
         should.exist(err);
         done();
       });
+      download.run();
     });
   });
 
