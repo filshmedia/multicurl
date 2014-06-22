@@ -26,6 +26,7 @@
     "should": "~1.2.2"
   },
   "dependencies": {
+    "request": "^2.36.0",
     "underscore": "~1.5.2"
   }
 }

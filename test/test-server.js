@@ -3,13 +3,9 @@ var express = require("express")
   , testFileAccessed = 0
   , fileSize = 1024;
 
-app.head("/testfile", function (req, res) {
-  res.setHeader("Content-Length", fileSize);
-  res.end();
-});
-
 app.get("/testfile", function (req, res) {
-  if(testFileAccessed !== 0) {
+  res.setHeader("Content-Length", fileSize);
+  if(testFileAccessed === 0 || testFileAccessed === 4) {
     for(var i = 0; i < fileSize; i++) {
       res.write("0");
     }
