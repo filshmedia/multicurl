@@ -76,7 +76,7 @@ describe("multicurl", function () {
       , filename = "tmp/test" + Math.round(Math.random() * 10000);
     before(function () {
       download = new multicurl("http://www.speedtest.qsc.de/1MB.qsc", {
-        connections: 3,
+        connections: 1,
         destination: filename
       });
       download.run();
