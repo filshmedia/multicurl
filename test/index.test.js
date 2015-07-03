@@ -13,7 +13,7 @@ before(function () {
 describe("multicurl", function () {
   it("should throw an error if no destination is given", function (done) {
     try {
-      var download = new multicurl("http://www.speedtest.qsc.de/1MB.qsc", {
+      var download = new multicurl("http://www.speedtestx.de/testfiles/data_1mb.test", {
         connections: 3
       });
       download.should.throw("No destination given");
@@ -24,7 +24,7 @@ describe("multicurl", function () {
 
   describe('.getFilesize', function () {
     it('should return the filesize', function (done) {
-      download = new multicurl("http://www.speedtest.qsc.de/100MB.qsc");
+      download = new multicurl("http://www.speedtestx.de/testfiles/data_100mb.test");
       download.getFilesize(function (err, filesize) {
         filesize.should.equal(104857600);
         done();
@@ -54,7 +54,7 @@ describe("multicurl", function () {
   describe("multicurl#getCommands", function () {
     var download;
     before(function () {
-      download = new multicurl("http://www.speedtest.qsc.de/1MB.qsc", {
+      download = new multicurl("http://www.speedtestx.de/testfiles/data_1mb.test", {
         connections: 3,
         destination: "foo/bar"
       });
@@ -63,9 +63,9 @@ describe("multicurl", function () {
     it("should return the correct commands", function (done) {
       var command = download.getCommands(function (err, commands) {
         commands.length.should.equal(3);
-        commands[0].should.equal("curl -o foo/bar.0 --connect-timeout 10000 -f --range 0-349524 http://www.speedtest.qsc.de/1MB.qsc");
-        commands[1].should.equal("curl -o foo/bar.1 --connect-timeout 10000 -f --range 349525-699049 http://www.speedtest.qsc.de/1MB.qsc");
-        commands[2].should.equal("curl -o foo/bar.2 --connect-timeout 10000 -f --range 699050-1048575 http://www.speedtest.qsc.de/1MB.qsc");
+        commands[0].should.equal("curl -o foo/bar.0 --connect-timeout 10000 -f --range 0-349524 http://www.speedtestx.de/testfiles/data_1mb.test");
+        commands[1].should.equal("curl -o foo/bar.1 --connect-timeout 10000 -f --range 349525-699049 http://www.speedtestx.de/testfiles/data_1mb.test");
+        commands[2].should.equal("curl -o foo/bar.2 --connect-timeout 10000 -f --range 699050-1048575 http://www.speedtestx.de/testfiles/data_1mb.test");
         done();
       });
     });
@@ -75,7 +75,7 @@ describe("multicurl", function () {
     var download
       , filename = "tmp/test" + Math.round(Math.random() * 10000);
     before(function () {
-      download = new multicurl("http://www.speedtest.qsc.de/1MB.qsc", {
+      download = new multicurl("http://www.speedtestx.de/testfiles/data_1mb.test", {
         connections: 1,
         destination: filename
       });
@@ -113,9 +113,10 @@ describe("multicurl", function () {
   describe("when an error happens before running curl", function () {
     var download;
     before(function () {
-      download = new multicurl("http://www.speedtest.qsc.de/thisprobablydoesntexist", {
+      download = new multicurl("http://www.speedtestx.de/thisprobablydoesntexist", {
         connections: 3,
-        destination: "temp/test" + Math.round(Math.random() * 10000)
+        destination: "temp/test" + Math.round(Math.random() * 10000),
+        maxRetries: 0
       });
     });
 
@@ -132,9 +133,10 @@ describe("multicurl", function () {
   describe("when an error happens while running curl", function () {
     var download;
     before(function () {
-      download = new multicurl("http://www.speedtest.qsc.de/1MB.qsc", {
+      download = new multicurl("http://www.speedtestx.de/testfiles/data_1mb.test", {
         connections: 3,
-        destination: "somethingthatdoesntexist/test" + Math.round(Math.random() * 10000)
+        destination: "somethingthatdoesntexist/test" + Math.round(Math.random() * 10000),
+        maxRetries: 0
       });
     });
 
@@ -163,6 +165,7 @@ describe("multicurl", function () {
     it("should try to reconnect", function (done) {
       this.timeout(30000);
       download.on("retry", function (retry, connectionIndex) {
+        console.log("Retrying...")
         retried++;
       });
       download.on("error", function (err) {
@@ -178,7 +181,7 @@ describe("multicurl", function () {
 
     var download;
     before(function () {
-      download = new multicurl("http://www.speedtest.qsc.de/100MB.qsc", {
+      download = new multicurl("http://www.speedtestx.de/testfiles/data_100mb.test", {
         connections: 3,
         destination: "tmp/test" + Math.round(Math.random() * 10000)
       });
